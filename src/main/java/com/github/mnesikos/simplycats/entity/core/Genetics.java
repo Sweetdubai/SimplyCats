@@ -36,23 +36,6 @@ public abstract class Genetics {
         public String getName() {
             return name().toLowerCase();
         }
-
-        public static String init(int value) {
-            switch (value) {
-                case 0:
-                    return COPPER.toString().toLowerCase();
-                case 1:
-                    return GOLD.toString().toLowerCase();
-                case 2:
-                    return HAZEL.toString().toLowerCase();
-                case 3:
-                    return GREEN.toString().toLowerCase();
-                case 4:
-                    return BLUE.toString().toLowerCase();
-                default:
-                    throw new IllegalArgumentException("Invalid eye color value: " + value);
-            }
-        }
     }
 
     public enum FurLength implements GeneticType {
