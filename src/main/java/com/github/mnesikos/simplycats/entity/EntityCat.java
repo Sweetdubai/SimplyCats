@@ -7,7 +7,6 @@ import com.github.mnesikos.simplycats.entity.ai.CatAIMate;
 import com.github.mnesikos.simplycats.entity.ai.CatAIWander;
 import com.github.mnesikos.simplycats.entity.core.Genetics;
 import com.github.mnesikos.simplycats.init.ModItems;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -343,7 +342,7 @@ public class EntityCat extends AbstractCat {
                     if (!this.isFixed()) {
                         this.setFixed(true);
                         if (this.world.isRemote) {
-                            player.sendMessage(new TextComponentString(this.getName() + " " + I18n.format("chat.info.success_fixed_" + this.getSex().getName())));
+                            player.sendMessage(new TextComponentString(this.getName() + " " + new TextComponentTranslation("chat.info.success_fixed_" + this.getSex().getName()).getFormattedText()));
                         }
                     }
                     return true;
@@ -370,15 +369,15 @@ public class EntityCat extends AbstractCat {
                             player.sendMessage(new TextComponentTranslation("chat.info.fixed_male"));
                     } else if (this.getSex() == Genetics.Sex.FEMALE && this.getBreedingStatus(BreedingStatus.PREGNANT)) {
                         if (!this.getBreedingStatus(BreedingStatus.IN_HEAT))
-                            player.sendMessage(new TextComponentString(I18n.format("chat.info.pregnant") + " " + this.getMateTimer()/* + parents + this.getParent("mother") + "/" + this.getParent("father")*/));
+                            player.sendMessage(new TextComponentString(new TextComponentTranslation("chat.info.pregnant").getFormattedText() + " " + this.getMateTimer()/* + parents + this.getParent("mother") + "/" + this.getParent("father")*/));
                         else
-                            player.sendMessage(new TextComponentString(I18n.format("chat.info.pregnant_heat") + " " + this.getMateTimer()));
+                            player.sendMessage(new TextComponentString(new TextComponentTranslation("chat.info.pregnant_heat").getFormattedText() + " " + this.getMateTimer()));
                     } else if (this.getSex() == Genetics.Sex.FEMALE && this.getBreedingStatus(BreedingStatus.IN_HEAT))
-                        player.sendMessage(new TextComponentString(I18n.format("chat.info.in_heat") + " " + this.getMateTimer()/* + parents + this.getParent("mother") + "/" + this.getParent("father")*/));
+                        player.sendMessage(new TextComponentString(new TextComponentTranslation("chat.info.in_heat").getFormattedText() + " " + this.getMateTimer()/* + parents + this.getParent("mother") + "/" + this.getParent("father")*/));
                     else if (this.getSex() == Genetics.Sex.FEMALE && !this.getBreedingStatus(BreedingStatus.IN_HEAT))
-                        player.sendMessage(new TextComponentString(I18n.format("chat.info.not_in_heat") + " " + this.getMateTimer()/* + parents + this.getParent("mother") + "/" + this.getParent("father")*/));
+                        player.sendMessage(new TextComponentString(new TextComponentTranslation("chat.info.not_in_heat").getFormattedText() + " " + this.getMateTimer()/* + parents + this.getParent("mother") + "/" + this.getParent("father")*/));
                     else if (this.getSex() == Genetics.Sex.MALE)
-                        player.sendMessage(new TextComponentString(I18n.format("chat.info.male") + " " + this.getMateTimer()/* + parents + this.getParent("mother") + "/" + this.getParent("father")*/));
+                        player.sendMessage(new TextComponentString(new TextComponentTranslation("chat.info.male").getFormattedText() + " " + this.getMateTimer()/* + parents + this.getParent("mother") + "/" + this.getParent("father")*/));
                 }
                 return true;
 

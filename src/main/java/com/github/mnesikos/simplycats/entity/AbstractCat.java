@@ -23,6 +23,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -577,7 +578,7 @@ public abstract class AbstractCat extends EntityTameable {
         if (this.hasCustomName())
             return this.getCustomNameTag();
         else
-            return this.isTamed() ? I18n.format("entity.Cat.name") : super.getName();
+            return this.isTamed() ? new TextComponentTranslation("entity.Cat.name").getFormattedText() : super.getName();
     }
 
     @Nullable
