@@ -1,40 +1,43 @@
 package com.github.mnesikos.simplycats;
 
 import com.github.mnesikos.simplycats.entity.core.Genetics;
+import com.github.mnesikos.simplycats.proxy.CommonProxy;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.datafix.IFixableData;
 
 import java.util.Random;
 
 public class CatDataFixer implements IFixableData {
+    private final Random rand = new Random();
+
     @Override
     public int getFixVersion() {
-        return 2;
+        return CommonProxy.FIXER_VERSION;
     }
 
     @Override
     public NBTTagCompound fixTagCompound(NBTTagCompound compound) {
         if(compound.hasKey("id")) {
             String id = compound.getString("id");
-            if(id.equals("simplycats:cat")) {
+            if(id.equals(Ref.MODID + ":cat")) {
                 boolean red = false;
                 boolean dilute = false;
 
                 if (compound.hasKey("eyes")) {
-                    compound.setString("EyeColor", Genetics.EyeColor.init(compound.getInteger("eyes")));
+                    compound.setString("EyeColor", Genetics.EyeColor.values()[compound.getInteger("eyes")].getName());
                     compound.removeTag("eyes");
                 }
 
                 if (compound.hasKey("Type")) {
-                    compound.setString("FurLength", Genetics.FurLength.init() + "-" + Genetics.FurLength.init());
+                    compound.setString("FurLength", Genetics.FurLength.init(rand) + "-" + Genetics.FurLength.init(rand));
                     compound.removeTag("Type");
                 }
 
                 if (compound.hasKey("Base")) {
-                    String base = Genetics.Eumelanin.init() + "-" + Genetics.Eumelanin.init();
+                    String base = Genetics.Eumelanin.init(rand) + "-" + Genetics.Eumelanin.init(rand);
                     switch (compound.getInteger("Base")) {
                         case 0:
-                            base = Genetics.Eumelanin.BLACK.getAllele() + "-" + Genetics.Eumelanin.init();
+                            base = Genetics.Eumelanin.BLACK.getAllele() + "-" + Genetics.Eumelanin.init(rand);
                             break;
                         case 1:
                             dilute = true;
@@ -72,28 +75,28 @@ public class CatDataFixer implements IFixableData {
                 if (dilute)
                     compound.setString("Dilution", Genetics.Dilution.DILUTE.getAllele() + "-" + Genetics.Dilution.DILUTE.getAllele());
                 else
-                    compound.setString("Dilution", Genetics.Dilution.NON_DILUTE.getAllele() + "-" + Genetics.Dilution.init());
+                    compound.setString("Dilution", Genetics.Dilution.NON_DILUTE.getAllele() + "-" + Genetics.Dilution.init(rand));
 
-                compound.setString("DiluteMod", Genetics.DiluteMod.NORMAL.getAllele() + "-" + Genetics.DiluteMod.init());
+                compound.setString("DiluteMod", Genetics.DiluteMod.NORMAL.getAllele() + "-" + Genetics.DiluteMod.init(rand));
 
                 if (compound.hasKey("tabby")) {
                     int origTabby = compound.getInteger("tabby");
                     if (origTabby >= 3)
-                        compound.setString("Agouti", Genetics.Agouti.init() + "-" + Genetics.Agouti.init());
+                        compound.setString("Agouti", Genetics.Agouti.init(rand) + "-" + Genetics.Agouti.init(rand));
                     if (origTabby != 0 && origTabby <= 2)
-                        compound.setString("Agouti", Genetics.Agouti.TABBY.getAllele() + "-" + Genetics.Agouti.init());
+                        compound.setString("Agouti", Genetics.Agouti.TABBY.getAllele() + "-" + Genetics.Agouti.init(rand));
                     if (origTabby == 0)
                         compound.setString("Agouti", Genetics.Agouti.SOLID.getAllele() + "-" + Genetics.Agouti.SOLID.getAllele());
-                    compound.setString("Tabby", Genetics.Tabby.MACKEREL.getAllele() + "-" + Genetics.Tabby.init());
-                    compound.setString("Spotted", Genetics.Spotted.NORMAL.getAllele() + "-" + Genetics.Spotted.init());
-                    compound.setString("Ticked", Genetics.Ticked.NORMAL.getAllele() + "-" + Genetics.Ticked.init());
+                    compound.setString("Tabby", Genetics.Tabby.MACKEREL.getAllele() + "-" + Genetics.Tabby.init(rand));
+                    compound.setString("Spotted", Genetics.Spotted.NORMAL.getAllele() + "-" + Genetics.Spotted.init(rand));
+                    compound.setString("Ticked", Genetics.Ticked.NORMAL.getAllele() + "-" + Genetics.Ticked.init(rand));
                     compound.removeTag("tabby");
                 }
 
-                compound.setString("Colorpoint", Genetics.Colorpoint.NOT_POINTED.getAllele() + "-" + Genetics.Colorpoint.init());
+                compound.setString("Colorpoint", Genetics.Colorpoint.NOT_POINTED.getAllele() + "-" + Genetics.Colorpoint.init(rand));
 
                 if (compound.hasKey("white")) {
-                    String white = Genetics.White.init() + "-" + Genetics.White.init();
+                    String white = Genetics.White.init(rand) + "-" + Genetics.White.init(rand);
                     switch (compound.getInteger("white")) {
                         case 0:
                             white = Genetics.White.NONE.getAllele() + "-" + Genetics.White.NONE.getAllele();
@@ -107,7 +110,6 @@ public class CatDataFixer implements IFixableData {
                         case 5:
                             white = Genetics.White.SPOTTING.getAllele() + "-" + Genetics.White.SPOTTING.getAllele();
                         case 6:
-                            Random rand = new Random();
                             if (rand.nextInt(8) == 0)
                                 white = Genetics.White.DOMINANT.getAllele() + "-" + Genetics.White.DOMINANT.getAllele();
                             break;
@@ -127,7 +129,6 @@ public class CatDataFixer implements IFixableData {
         int body = 0;
         int face = 0;
         int tail = 0;
-        Random rand = new Random();
 
         compound.setString("WhitePaws_0", "");
         compound.setString("WhitePaws_1", "");
@@ -189,7 +190,6 @@ public class CatDataFixer implements IFixableData {
     }
 
     private void setWhitePaws(NBTTagCompound compound, int base) {
-        Random rand = new Random();
         if (rand.nextInt(4) <= 2)
             compound.setString("WhitePaws_0", "white_" + base + "_paw1");
 
