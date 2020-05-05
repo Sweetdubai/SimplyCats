@@ -6,19 +6,17 @@ import com.github.mnesikos.simplycats.entity.core.Genetics;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.world.World;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class CatAIMate extends EntityAIBase {
-
     private final EntityCat CAT;
     private EntityCat TARGET;
-    private World WORLD;
-    private double MOVE_SPEED;
+    private final World WORLD;
+    private final double MOVE_SPEED;
     private int MATE_DELAY;
 
     private List<EntityCat> LIST;
-    private double NEARBY_SIZE_CHECK = 16.0D;
+    private final double NEARBY_SIZE_CHECK = 16.0D;
 
     public CatAIMate(EntityCat entityCat, double speed) {
         this.CAT = entityCat;
@@ -76,18 +74,14 @@ public class CatAIMate extends EntityAIBase {
     }
 
     private EntityCat getNearbyMate() {
-        List<EntityCat> list = this.WORLD.getEntitiesWithinAABB(this.CAT.getClass(), this.CAT.getEntityBoundingBox().grow(NEARBY_SIZE_CHECK));
         double d0 = Double.MAX_VALUE;
         EntityCat entityCat = null;
-        Iterator<?> iterator = list.iterator();
 
-        if (this.CAT.getSex().equals(Genetics.Sex.MALE.getName()))
-            while (iterator.hasNext()) {
-                EntityCat cat1 = (EntityCat) iterator.next();
-
-                if (this.CAT.canMateWith(cat1) && this.CAT.getDistanceSq(cat1) < d0) {
-                    entityCat = cat1;
-                    d0 = this.CAT.getDistanceSq(cat1);
+        if (this.CAT.getSex() == Genetics.Sex.MALE)
+            for (EntityCat cat : this.WORLD.getEntitiesWithinAABB(this.CAT.getClass(), this.CAT.getEntityBoundingBox().grow(NEARBY_SIZE_CHECK))) {
+                if (this.CAT.canMateWith(cat) && this.CAT.getDistanceSq(cat) < d0) {
+                    entityCat = cat;
+                    d0 = this.CAT.getDistanceSq(cat);
                 }
             }
 

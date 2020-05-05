@@ -63,11 +63,9 @@ public class ItemPetCarrier extends ItemBase {
                     target.setDead();
 
                     tags.setString("id", EntityList.getEntityString(target));
-                    Iterator var5 = ForgeRegistries.ENTITIES.getEntries().iterator();
-                    while(var5.hasNext()) {
-                        Map.Entry<ResourceLocation, EntityEntry> f = (Map.Entry)var5.next();
-                        if (((EntityEntry)f.getValue()).getEntityClass() == target.getClass()) {
-                            tags.setString("Entity", String.valueOf(f.getKey()));
+                    for (Map.Entry<ResourceLocation, EntityEntry> entry : ForgeRegistries.ENTITIES.getEntries()) {
+                        if (entry.getValue().getEntityClass() == target.getClass()) {
+                            tags.setString("Entity", entry.getKey().toString());
                         }
                     }
                     tags.setString("ownerName", player.getDisplayNameString());

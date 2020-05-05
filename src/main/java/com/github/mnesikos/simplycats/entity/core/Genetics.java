@@ -19,7 +19,7 @@ public abstract class Genetics {
         }
     }
 
-    public enum EyeColor implements IStringSerializable{
+    public enum EyeColor implements IStringSerializable {
         COPPER,
         GOLD,
         HAZEL,
