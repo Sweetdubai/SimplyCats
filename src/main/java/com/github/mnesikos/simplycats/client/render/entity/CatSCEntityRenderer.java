@@ -2,7 +2,8 @@ package com.github.mnesikos.simplycats.client.render.entity;
 
 import com.github.mnesikos.simplycats.Ref;
 import com.github.mnesikos.simplycats.client.model.entity.CatSCModel;
-import com.github.mnesikos.simplycats.client.render.entity.feature.CatMarkingFeatureRenderer;
+import com.github.mnesikos.simplycats.client.render.entity.feature.CatEyesFeatureRenderer;
+import com.github.mnesikos.simplycats.client.render.entity.feature.CatTabbyFeatureRenderer;
 import com.github.mnesikos.simplycats.entity.CatSCEntity;
 import com.github.mnesikos.simplycats.entity.core.Genetics;
 import com.google.common.collect.Maps;
@@ -39,7 +40,8 @@ public class CatSCEntityRenderer extends MobEntityRenderer<CatSCEntity, CatSCMod
 
     public CatSCEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher, new CatSCModel<>(), 0.2f);
-        this.addFeature(new CatMarkingFeatureRenderer(this));
+        this.addFeature(new CatTabbyFeatureRenderer(this));
+        this.addFeature(new CatEyesFeatureRenderer(this));
     }
 
     @Override
@@ -50,16 +52,19 @@ public class CatSCEntityRenderer extends MobEntityRenderer<CatSCEntity, CatSCMod
 
     @Override
     public Identifier getTexture(CatSCEntity entity) {
-        if (Genetics.Phaeomelanin.getPhenotype(entity.getPhaeomelanin()).equalsIgnoreCase(Genetics.Phaeomelanin.RED.toString())) {
-            if (Genetics.Dilution.getPhenotype(entity.getDilution()).equalsIgnoreCase(Genetics.Dilution.DILUTE.toString()))
-                return DILUTION_RED;
-            else
-                return PHAEOMELANIN;
+        if (!entity.getEumelanin().isEmpty()) {
+            if (Genetics.Phaeomelanin.getPhenotype(entity.getPhaeomelanin()).equalsIgnoreCase(Genetics.Phaeomelanin.RED.toString())) {
+                if (Genetics.Dilution.getPhenotype(entity.getDilution()).equalsIgnoreCase(Genetics.Dilution.DILUTE.toString()))
+                    return DILUTION_RED;
+                else
+                    return PHAEOMELANIN;
 
-        } else if (Genetics.Dilution.getPhenotype(entity.getDilution()).equalsIgnoreCase(Genetics.Dilution.DILUTE.toString()))
-            return DILUTION.get(getEumelanin(entity));
+            } else if (Genetics.Dilution.getPhenotype(entity.getDilution()).equalsIgnoreCase(Genetics.Dilution.DILUTE.toString()))
+                return DILUTION.get(getEumelanin(entity));
 
-        return EUMELANIN.get(getEumelanin(entity));
+            return EUMELANIN.get(getEumelanin(entity));
+        }
+        return EUMELANIN.get(Genetics.Eumelanin.BLACK);
     }
 
     private Genetics.Eumelanin getEumelanin(CatSCEntity entity) {

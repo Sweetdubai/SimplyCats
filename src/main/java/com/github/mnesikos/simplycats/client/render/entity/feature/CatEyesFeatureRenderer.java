@@ -20,7 +20,7 @@ import net.minecraft.util.Util;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public class CatMarkingFeatureRenderer extends FeatureRenderer<CatSCEntity, CatSCModel<CatSCEntity>> {
+public class CatEyesFeatureRenderer extends FeatureRenderer<CatSCEntity, CatSCModel<CatSCEntity>> {
     private static final Map<Genetics.EyeColor, Identifier> EYE_COLOR = Util.make(Maps.newEnumMap(Genetics.EyeColor.class), (enumMap) -> {
         enumMap.put(Genetics.EyeColor.COPPER, new Identifier(Ref.MOD_ID, "textures/entity/cat/eyes/copper.png"));
         enumMap.put(Genetics.EyeColor.GOLD, new Identifier(Ref.MOD_ID, "textures/entity/cat/eyes/gold.png"));
@@ -29,16 +29,18 @@ public class CatMarkingFeatureRenderer extends FeatureRenderer<CatSCEntity, CatS
         enumMap.put(Genetics.EyeColor.BLUE, new Identifier(Ref.MOD_ID, "textures/entity/cat/eyes/blue.png"));
     });
 
-    public CatMarkingFeatureRenderer(FeatureRendererContext<CatSCEntity, CatSCModel<CatSCEntity>> context) {
+    public CatEyesFeatureRenderer(FeatureRendererContext<CatSCEntity, CatSCModel<CatSCEntity>> context) {
         super(context);
     }
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CatSCEntity entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        Identifier identifier = EYE_COLOR.get(Genetics.EyeColor.getByString(entity.getEyeColor()));
-        if (identifier != null && !entity.isInvisible()) {
-            VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(identifier));
-            ((CatSCModel)this.getContextModel()).render(matrices, vertexConsumer, light, LivingEntityRenderer.getOverlay(entity, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
+        if (!entity.getEyeColor().isEmpty()) {
+            Identifier eyeColorIdentifier = EYE_COLOR.get(Genetics.EyeColor.getByString(entity.getEyeColor()));
+            if (eyeColorIdentifier != null && !entity.isInvisible()) {
+                VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(eyeColorIdentifier));
+                (this.getContextModel()).render(matrices, vertexConsumer, light, LivingEntityRenderer.getOverlay(entity, 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
+            }
         }
     }
 }

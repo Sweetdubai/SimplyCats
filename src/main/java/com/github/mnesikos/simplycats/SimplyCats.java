@@ -1,15 +1,10 @@
 package com.github.mnesikos.simplycats;
 
-import com.github.mnesikos.simplycats.client.render.entity.CatSCEntityRenderer;
 import com.github.mnesikos.simplycats.entity.CatSCEntity;
 import com.github.mnesikos.simplycats.init.ModBlocks;
 import com.github.mnesikos.simplycats.init.ModItems;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
@@ -28,7 +23,7 @@ public class SimplyCats implements ModInitializer {
 	public static final EntityType<CatSCEntity> CAT = Registry.register(
 			Registry.ENTITY_TYPE,
 			new Identifier(Ref.MOD_ID, "cat"),
-			FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CatSCEntity::new).dimensions(EntityDimensions.fixed(0.6f, 0.8f)).build()
+			FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CatSCEntity::new).dimensions(EntityDimensions.fixed(0.6f, 0.8f)).trackable(80, 1, true).build()
 	);
 
 	@Override

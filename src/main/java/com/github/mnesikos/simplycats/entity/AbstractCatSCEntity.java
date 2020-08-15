@@ -1,7 +1,10 @@
 package com.github.mnesikos.simplycats.entity;
 
+import com.github.mnesikos.simplycats.Ref;
 import com.github.mnesikos.simplycats.SimplyCats;
 import com.github.mnesikos.simplycats.entity.core.Genetics.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -52,6 +55,7 @@ public class AbstractCatSCEntity extends TameableEntity {
     
     private String texturePrefix;
     private final String[] catTexturesArray = new String[12];
+    private String tabbyTexture;
 
     private static final TrackedData<Optional<BlockPos>> HOME_POSITION = DataTracker.registerData(AbstractCatSCEntity.class, TrackedDataHandlerRegistry.OPTIONAL_BLOCK_POS);
     public static final TrackedData<String> OWNER_NAME = DataTracker.registerData(AbstractCatSCEntity.class, TrackedDataHandlerRegistry.STRING);
@@ -60,12 +64,11 @@ public class AbstractCatSCEntity extends TameableEntity {
     
     public AbstractCatSCEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
-        setPhenotype();
     }
 
     @Override
     public EntityData initialize(WorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, CompoundTag entityTag) {
-        //this.setPhenotype();
+        this.setPhenotype();
         return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
     }
 
@@ -450,24 +453,14 @@ public class AbstractCatSCEntity extends TameableEntity {
 
     private void resetTexturePrefix() {
         this.texturePrefix = null;
+        this.tabbyTexture = null;
     }
 
     /*@SideOnly(Side.CLIENT)
     private void setCatTexturePaths() {
-        String solid = this.getPhenotype(EUMELANIN);
-        if (this.getPhenotype(PHAEOMELANIN).equalsIgnoreCase(Phaeomelanin.RED.toString().toLowerCase()))
-            solid = this.getPhenotype(PHAEOMELANIN);
-        if (this.getPhenotype(DILUTION).equalsIgnoreCase(Dilution.DILUTE.toString().toLowerCase())) {
-            solid = solid + "_" + this.getPhenotype(DILUTION);
-            *//*if (this.getPhenotype(DILUTE_MOD).equalsIgnoreCase(DiluteMod.CARAMELIZED.toString().toLowerCase()))
-                solid = solid + "_" + this.getPhenotype(DILUTE_MOD);*//*
-        }
 
-        String tabby = this.getPhenotype(TABBY) + "_" + solid;
-        if (this.getGenotype(SPOTTED).contains(Spotted.SPOTTED.getAllele()))
-            tabby = this.getPhenotype(SPOTTED) + "_" + tabby;
-        if (this.getPhenotype(TICKED).equalsIgnoreCase(Ticked.TICKED.toString().toLowerCase()))
-            tabby = this.getPhenotype(TICKED) + "_" + solid;
+
+
 
         String tortie = "";
         if (this.getPhenotype(PHAEOMELANIN).equalsIgnoreCase(Phaeomelanin.TORTOISESHELL.toString().toLowerCase())) {
@@ -479,8 +472,7 @@ public class AbstractCatSCEntity extends TameableEntity {
             }
         }
 
-        if (!this.getPhenotype(PHAEOMELANIN).equalsIgnoreCase(Phaeomelanin.RED.toString()) && this.getPhenotype(AGOUTI).equalsIgnoreCase(Agouti.SOLID.toString().toLowerCase()))
-            tabby = "";
+
 
         String colorpoint = "";
         if (!this.getPhenotype(COLORPOINT).equalsIgnoreCase(Colorpoint.NOT_POINTED.toString().toLowerCase())) {
@@ -496,7 +488,7 @@ public class AbstractCatSCEntity extends TameableEntity {
         }
 
         this.catTexturesArray[0] = Ref.MODID + ":textures/entity/cat/solid/" + solid + ".png";
-        this.catTexturesArray[1] = tabby.equals("") ? null : (Ref.MODID + ":textures/entity/cat/tabby/" + tabby + ".png");
+        this.tabbyTexture[1] = tabby.equals("") ? "" : (Ref.MOD_ID + ":textures/entity/cat/tabby/" + tabby + ".png");
         this.catTexturesArray[2] = tortie.equals("") ? null : (Ref.MODID + ":textures/entity/cat/tortie/" + tortie + ".png");
         this.catTexturesArray[3] = colorpoint.equals("") ? null : (Ref.MODID + ":textures/entity/cat/colorpoint/" + colorpoint + ".png");
         this.catTexturesArray[4] = this.getWhiteTextures(0).equals("") ? null : (Ref.MODID + ":textures/entity/cat/white/new/" + this.getWhiteTextures(0) + ".png");
@@ -512,24 +504,55 @@ public class AbstractCatSCEntity extends TameableEntity {
                 this.getWhitePawTextures(0) + this.getWhitePawTextures(1) +
                 this.getWhitePawTextures(2) + this.getWhitePawTextures(3) +
                 getPhenotype(EYE_COLOR);
-        // todo System.out.println(this.texturePrefix);
-    }
+    }*/
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public String getCatTexture() {
         if (this.texturePrefix == null)
             this.setCatTexturePaths();
 
         return this.texturePrefix;
-    }
+    }*/
 
-    @SideOnly(Side.CLIENT)
+    /*@SideOnly(Side.CLIENT)
     public String[] getTexturePaths() {
         if (this.texturePrefix == null)
             this.setCatTexturePaths();
 
         return this.catTexturesArray;
     }*/
+
+    @Environment(EnvType.CLIENT)
+    private String getSolidTexture() {
+        String solid = this.getPhenotype(EUMELANIN);
+        if (this.getPhenotype(PHAEOMELANIN).equalsIgnoreCase(Phaeomelanin.RED.toString().toLowerCase()))
+            solid = this.getPhenotype(PHAEOMELANIN);
+        if (this.getPhenotype(DILUTION).equalsIgnoreCase(Dilution.DILUTE.toString().toLowerCase())) {
+            solid = solid + "_" + this.getPhenotype(DILUTION);
+            /*if (this.getPhenotype(DILUTE_MOD).equalsIgnoreCase(DiluteMod.CARAMELIZED.toString().toLowerCase()))
+            solid = solid + "_" + this.getPhenotype(DILUTE_MOD);*/
+        }
+        return solid;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public String getTabbyTexture() {
+        if (this.tabbyTexture == null) {
+            String solid = this.getSolidTexture();
+            String tabby = this.getPhenotype(TABBY) + "_" + solid;
+            if (this.getSpotted().contains(Spotted.SPOTTED.getAllele()))
+                tabby = this.getPhenotype(SPOTTED) + "_" + tabby;
+            if (this.getPhenotype(TICKED).equalsIgnoreCase(Ticked.TICKED.toString().toLowerCase()))
+                tabby = this.getPhenotype(TICKED) + "_" + solid;
+
+            if (!this.getPhenotype(PHAEOMELANIN).equalsIgnoreCase(Phaeomelanin.RED.toString()) && this.getPhenotype(AGOUTI).equalsIgnoreCase(Agouti.SOLID.toString().toLowerCase()))
+                tabby = "";
+
+            this.tabbyTexture = tabby;
+        }
+
+        return this.tabbyTexture;
+    }
 
     @Override
     public void baseTick() {
